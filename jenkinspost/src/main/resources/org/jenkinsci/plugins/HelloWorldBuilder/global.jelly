@@ -11,10 +11,9 @@
     tags they use. Views are always organized according to its owner class,
     so it should be straightforward to find them.
   -->
-  <f:section title="Hello World Builder">
-    <f:entry title="French" field="useFrench"
-      description="Check if we should say hello in French">
-      <f:checkbox />
+  <f:section title="Jenkins Post Plugin">
+    <f:entry title="Post URL" field="postURL" description="Post URL to send content to.">
+      <f:textbox name="postURL" value="${it.postURL}"/>
     </f:entry>
   </f:section>
 </j:jelly>

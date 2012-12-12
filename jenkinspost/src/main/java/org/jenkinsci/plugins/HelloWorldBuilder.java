@@ -55,7 +55,7 @@ public class HelloWorldBuilder extends Builder {
         // Since this is a dummy, we just say 'hello world' and call that a build.
 
         // This also shows how you can consult the global configuration of the builder
-        if (getDescriptor().getUseFrench())
+        if (getDescriptor().getPostURL().equals("french"))
             listener.getLogger().println("Bonjour, "+name+"!");
         else
             listener.getLogger().println("Hello, "+name+"!");
@@ -87,7 +87,7 @@ public class HelloWorldBuilder extends Builder {
          * <p>
          * If you don't want fields to be persisted, use <tt>transient</tt>.
          */
-        private boolean useFrench;
+        private String postURL;
 
         /**
          * Performs on-the-fly validation of the form field 'name'.
@@ -99,10 +99,10 @@ public class HelloWorldBuilder extends Builder {
          */
         public FormValidation doCheckName(@QueryParameter String value)
                 throws IOException, ServletException {
-            if (value.length() == 0)
+            /* if (value.length() == 0)
                 return FormValidation.error("Please set a name");
             if (value.length() < 4)
-                return FormValidation.warning("Isn't the name too short?");
+                return FormValidation.warning("Isn't the name too short?"); */
             return FormValidation.ok();
         }
 
@@ -115,14 +115,14 @@ public class HelloWorldBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Say hello world";
+            return "Send post information to service";
         }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             // To persist global configuration information,
             // set that to properties and call save().
-            useFrench = formData.getBoolean("useFrench");
+            postURL = formData.getString("postURL");
             // ^Can also use req.bindJSON(this, formData);
             //  (easier when there are many fields; need set* methods for this, like setUseFrench)
             save();
@@ -135,8 +135,8 @@ public class HelloWorldBuilder extends Builder {
          * The method name is bit awkward because global.jelly calls this method to determine
          * the initial state of the checkbox by the naming convention.
          */
-        public boolean getUseFrench() {
-            return useFrench;
+        public String getPostURL() {
+            return postURL;
         }
     }
 }
