@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins;
+package org.jenkins.plugins.jenkinspost;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.util.FormValidation;
