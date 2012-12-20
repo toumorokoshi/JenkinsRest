@@ -2,6 +2,7 @@ package org.jenkins.plugins.jenkinspost;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ public class JenkinsPost extends Plugin {
 	public final static Logger LOG = Logger.getLogger(JenkinsPost.class.getName());
 	private static boolean sendGlobalPosts; // send posts globally 
 	private static String globalPostURL; // global URL to post to
+	private static String globalPostContentType; // content type to send the request as 
 	private static String globalPostString; // String to post to the globalPostURL
 	
 	public void start() throws IOException {
@@ -33,6 +35,7 @@ public class JenkinsPost extends Plugin {
 		if(formData.has("sendGlobalPosts")) {
 			sendGlobalPosts = true;
 			globalPostURL = formData.getJSONObject("sendGlobalPosts").getString("globalPostURL");
+			globalPostContentType = formData.getJSONObject("sendGlobalPosts").getString("globalPostContentType");
 			globalPostString = formData.getJSONObject("sendGlobalPosts").getString("globalPostString");
 		} else {
 			sendGlobalPosts = false;
@@ -42,18 +45,29 @@ public class JenkinsPost extends Plugin {
 	
 	public static boolean getSendGlobalPosts() { return sendGlobalPosts; }
 	public static String getGlobalPostURL() { return globalPostURL; }
+	public static String getGlobalPostContentType() { return globalPostContentType; }
 	public static String getGlobalPostString() { return globalPostString; }
 	
+	public static void sendPost(String postString) {
+		sendPost(globalPostURL, globalPostContentType, postString);
+	}
+	
 	public static void sendPost(String postURL, String contentType, String postString) {
-		try {
-			URL url = new URL(postURL);
-			HttpURLConnection connection = 
-					(HttpURLConnection) url.openConnection();
-			connection.setUseCaches(false);
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", contentType);
-		}
+			URL url;
+			try {
+				url = new URL(postURL);
+				HttpURLConnection connection;
+				connection = (HttpURLConnection) url.openConnection();
+				connection.setUseCaches(false);
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
+				connection.setRequestMethod("POST");
+			} catch (MalformedURLException e) {
+				LOG.info("Malformed url: " + postURL);
+				e.printStackTrace();
+			} catch (IOException e) {
+				LOG.info("Couldn't open connection to url: " + postURL);
+				e.printStackTrace();
+			}
 	}
 }
