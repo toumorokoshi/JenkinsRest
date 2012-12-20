@@ -1,6 +1,8 @@
 package org.jenkins.plugins.jenkinspost;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import net.sf.json.JSONObject;
@@ -41,4 +43,17 @@ public class JenkinsPost extends Plugin {
 	public static boolean getSendGlobalPosts() { return sendGlobalPosts; }
 	public static String getGlobalPostURL() { return globalPostURL; }
 	public static String getGlobalPostString() { return globalPostString; }
+	
+	public static void sendPost(String postURL, String contentType, String postString) {
+		try {
+			URL url = new URL(postURL);
+			HttpURLConnection connection = 
+					(HttpURLConnection) url.openConnection();
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", contentType);
+		}
+	}
 }
