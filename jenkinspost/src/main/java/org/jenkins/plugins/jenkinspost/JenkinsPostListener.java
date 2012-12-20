@@ -14,14 +14,16 @@ public class JenkinsPostListener extends RunListener<Run> {
 	
 	@Override
 	public void onCompleted(Run r, TaskListener listener) {
-		JenkinsPost.LOG.info(r.getId());
-		JenkinsPost.LOG.info(r.getFullDisplayName());
-		JenkinsPost.LOG.info(r.getUrl());
-		JenkinsPost.LOG.info(r.getTimestamp().toString());
-		JenkinsPost.LOG.info(r.getSearchName());
-		JenkinsPost.LOG.info(r.getParent().getDisplayName());
-		JenkinsPost.LOG.info(r.getBuildStatusSummary().message);
-		JenkinsPost.LOG.info("Listened!");
+		if(JenkinsPost.getSendGlobalPosts()) {
+			JenkinsPost.LOG.info(r.getId());
+			JenkinsPost.LOG.info(r.getFullDisplayName());
+			JenkinsPost.LOG.info(r.getUrl());
+			JenkinsPost.LOG.info(r.getTimestamp().toString());
+			JenkinsPost.LOG.info(r.getSearchName());
+			JenkinsPost.LOG.info(r.getParent().getDisplayName());
+			JenkinsPost.LOG.info(r.getBuildStatusSummary().message);
+			JenkinsPost.LOG.info("Listened!");
+		}
 	}
 
 }

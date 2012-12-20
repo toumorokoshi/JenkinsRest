@@ -21,9 +21,8 @@ public class JenkinsPostNotifier extends Notifier {
 		return BuildStepMonitor.BUILD;
 	}
 	
-	@Override
-	public JenkinsPostDescriptor getDescriptor() {
-		return (JenkinsPostDescriptor) super.getDescriptor();
+	public String getMyString() {
+		return "Hello Jenkins!";
 	}
 	
 	@Override
