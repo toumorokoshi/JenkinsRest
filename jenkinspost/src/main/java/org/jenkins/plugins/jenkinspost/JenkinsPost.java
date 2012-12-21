@@ -21,6 +21,7 @@ import org.apache.http.entity.StringEntity;
 import org.kohsuke.stapler.StaplerRequest;
 
 import hudson.Plugin;
+import hudson.util.ListBoxModel;
 
 public class JenkinsPost extends Plugin {
 	public final static Logger LOG = Logger.getLogger(JenkinsPost.class.getName());
@@ -48,6 +49,9 @@ public class JenkinsPost extends Plugin {
 			globalPostURL = formData.getJSONObject("sendGlobalPosts").getString("globalPostURL");
 			globalPostContentType = formData.getJSONObject("sendGlobalPosts").getString("globalPostContentType");
 			globalPostString = formData.getJSONObject("sendGlobalPosts").getString("globalPostString");
+			LOG.info(globalPostURL);
+			LOG.info(globalPostContentType);
+			LOG.info(globalPostString);
 		} else {
 			sendGlobalPosts = false;
 		}
@@ -61,6 +65,15 @@ public class JenkinsPost extends Plugin {
 	
 	public static void sendPost(String postString) {
 		sendPost(globalPostURL, globalPostContentType, postString);
+	}
+	
+	public static ListBoxModel doFillGlobalPostContentTypeItems() {
+		ListBoxModel items = new ListBoxModel();
+		items.add("Javascript", "application/javascript");
+		items.add("Json", "application/json");
+		items.add("text", "text/plain");
+		items.add("XML", "application/xml");
+		return items;
 	}
 	
 	public static void sendPost(String postURL, String contentType, String postString) {
