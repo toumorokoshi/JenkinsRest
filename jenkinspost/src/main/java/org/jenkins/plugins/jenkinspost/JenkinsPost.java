@@ -1,6 +1,11 @@
 package org.jenkins.plugins.jenkinspost;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,12 +13,18 @@ import java.util.logging.Logger;
 
 import net.sf.json.JSONObject;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.kohsuke.stapler.StaplerRequest;
 
 import hudson.Plugin;
 
 public class JenkinsPost extends Plugin {
 	public final static Logger LOG = Logger.getLogger(JenkinsPost.class.getName());
+	private static HttpClient httpclient = new DefaultHttpClient();
 	private static boolean sendGlobalPosts; // send posts globally 
 	private static String globalPostURL; // global URL to post to
 	private static String globalPostContentType; // content type to send the request as 
@@ -53,21 +64,20 @@ public class JenkinsPost extends Plugin {
 	}
 	
 	public static void sendPost(String postURL, String contentType, String postString) {
-			URL url;
-			try {
-				url = new URL(postURL);
-				HttpURLConnection connection;
-				connection = (HttpURLConnection) url.openConnection();
-				connection.setUseCaches(false);
-				connection.setDoInput(true);
-				connection.setDoOutput(true);
-				connection.setRequestMethod("POST");
-			} catch (MalformedURLException e) {
-				LOG.info("Malformed url: " + postURL);
-				e.printStackTrace();
-			} catch (IOException e) {
-				LOG.info("Couldn't open connection to url: " + postURL);
-				e.printStackTrace();
-			}
+		try {
+			HttpPost httppost = new HttpPost(postURL);
+			httppost.setEntity(new StringEntity(postString));
+			httppost.setHeader("Content-type", contentType);
+			httpclient.execute(httppost);
+			httppost.releaseConnection();
+		} catch (UnsupportedEncodingException e) {
+			// unsupported encoding for httppost
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// httpclient unable to execute
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -20,6 +20,7 @@ public class JenkinsPostListener extends RunListener<Run> {
 			postString = postString.replace("%JOB_NAME%", r.getParent().getDisplayName());
 			postString = postString.replace("%BUILD_MESSAGE%", 
 								r.getBuildStatusSummary().message);
+			JenkinsPost.sendPost(postString);
 			JenkinsPost.LOG.info(postString);
 			JenkinsPost.LOG.info("Post request was sent");
 		}
