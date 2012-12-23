@@ -42,7 +42,7 @@
 	   		  </j:choose>
 	   		</select>
 	    </f:entry>
-	    <f:entry title="Post String" help="/plugin/jenkinspost/help-postURL.html">
+	    <f:entry title="Post String" help="/plugin/jenkinspost/help-postString.html">
 	      <f:expandableTextbox name="globalPostString" value="${it.globalPostString}"/>
 	    </f:entry>
     </f:optionalBlock>
