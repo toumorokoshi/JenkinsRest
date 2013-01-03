@@ -17,6 +17,7 @@ public class JenkinsPostListener extends RunListener<Run> {
 		if(JenkinsPost.getSendGlobalPosts()) {
 			String postString = JenkinsPost.getGlobalPostString();
 			postString = postString.replace("%DATETIME%", r.getTime().toString());
+			postString = postString.replace("%BUILD_NUMBER%", Integer.toString(r.getNumber()));
 			postString = postString.replace("%BUILD_ID%", r.getId());
 			postString = postString.replace("%JOB_NAME%", r.getParent().getDisplayName());
 			postString = postString.replace("%BUILD_MESSAGE%", 
