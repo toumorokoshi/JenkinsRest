@@ -48,7 +48,8 @@ public class JenkinsPost extends Plugin {
 			sendGlobalPosts = true;
 			globalPostURL = formData.getJSONObject("sendGlobalPosts").getString("globalPostURL");
 			globalPostContentType = formData.getJSONObject("sendGlobalPosts").getString("globalPostContentType");
-			globalPostString = formData.getJSONObject("sendGlobalPosts").getString("globalPostString");
+			String s = formData.getJSONObject("sendGlobalPosts").getString("globalPostString").substring(1);
+			globalPostString = s.substring(0, s.length() - 1);
 			LOG.info(globalPostURL);
 			LOG.info(globalPostContentType);
 			LOG.info(globalPostString);
