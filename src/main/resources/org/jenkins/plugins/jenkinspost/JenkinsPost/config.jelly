@@ -1,0 +1,51 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="JenkinsPOST">
+  	<f:optionalBlock name="sendGlobalPosts" checked="${it.sendGlobalPosts}"
+  		title="Send POSTs on completion of all jobs">
+	    <f:entry title="POST URL" help="/plugin/jenkinspost/help-postURL.html">
+	      <f:textbox name="globalPostURL" value="${it.globalPostURL}"/>
+	    </f:entry>
+	    <f:entry title="POST ContentType" field="globalPostContentType">
+	   		<select name="globalPostContentType">
+	   		  <j:choose>	
+	   			<j:when test="${it.globalPostContentType == 'application/javascript'}">
+		   			<option value="application/javascript" selected="selected">Javascript</option>
+	   			</j:when>
+	   			<j:otherwise>
+		   			<option value="application/javascript">Javascript</option>
+	   			</j:otherwise>
+	   		  </j:choose>
+	   		  <j:choose>	
+	   			<j:when test="${it.globalPostContentType == 'application/json'}">
+		   			<option value="application/json" selected="selected">Json</option>
+	   			</j:when>
+	   			<j:otherwise>
+		   			<option value="application/json">Json</option>
+	   			</j:otherwise>
+	   		  </j:choose>
+	   		  <j:choose>	
+	   			<j:when test="${it.globalPostContentType == 'text/plain'}">
+		   			<option value="text/plain" selected="selected">text</option>
+	   			</j:when>
+	   			<j:otherwise>
+		   			<option value="text/plain">text</option>
+	   			</j:otherwise>
+	   		  </j:choose>
+	   		  <j:choose>	
+	   			<j:when test="${it.globalPostContentType == 'application/xml'}">
+		   			<option value="application/xml" selected="selected">XML</option>
+	   			</j:when>
+	   			<j:otherwise>
+		   			<option value="application/xml">XML</option>
+	   			</j:otherwise>
+	   		  </j:choose>
+	   		</select>
+	    </f:entry>
+	    <f:entry title="Post String" help="/plugin/jenkinspost/help-postString.html">
+	      <f:expandableTextbox name="globalPostString" value="${it.globalPostString}"/>
+	    </f:entry>
+    </f:optionalBlock>
+  </f:section>
+</j:jelly> 
+		
