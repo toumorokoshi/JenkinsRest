@@ -15,12 +15,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.entity.StringEntity;
 import org.kohsuke.stapler.StaplerRequest;
 
+import hudson.model.Run;
 import hudson.Plugin;
 import hudson.util.ListBoxModel;
 
 public class JenkinsRest extends Plugin {
 	public final static Logger LOG = Logger.getLogger(JenkinsRest.class.getName());
-	private static HttpClient httpclient = new DefaultHttpClient();
 	private static boolean sendGlobalRests; // send posts globally
     private static boolean globalRestIsPost; // determines whether the request is a get or a post
 	private static String globalRestURL; // global URL to post to
@@ -28,7 +28,7 @@ public class JenkinsRest extends Plugin {
 	private static String globalRestString; // String to post to the globalRestURL
 	
 	public void start() throws IOException {
-		LOG.info("Starting JenkinsPOST plugin...");
+		LOG.info("Starting JenkinsREST plugin...");
 		load();
 	}
 
@@ -59,19 +59,7 @@ public class JenkinsRest extends Plugin {
 	public static String getGlobalRestContentType() { return globalRestContentType; }
 	public static String getGlobalRestString() { return globalRestString; }
 
-	public static void sendRest(String postString) {
-        try {
-            if(globalRestIsPost) {
-                sendPostRequest(globalRestURL, globalRestContentType, globalRestString);
-            } else {
-                sendGetRequest(globalRestURL);
-            }
-        } catch (IOException e) {
-            LOG.severe("Unable to send rest api request!: " + e.getMessage());
-            e.printStackTrace();
-        }
-	}
-	
+
 	public static ListBoxModel doFillGlobalRestContentTypeItems() {
 		ListBoxModel items = new ListBoxModel();
 		items.add("Javascript", "application/javascript");
@@ -81,17 +69,15 @@ public class JenkinsRest extends Plugin {
 		return items;
 	}
 
-    private static void sendGetRequest(String restURL) throws IOException {
-        HttpGet request = new HttpGet(restURL);
-        httpclient.execute(request);
-        request.releaseConnection();
-    }
-
-    private static void sendPostRequest(String restURL, String contentType, String restString) throws IOException {
-        HttpPost request = new HttpPost(restURL);
-        request.setEntity(new StringEntity(restString));
-        request.setHeader("Content-type", contentType);
-        httpclient.execute(request);
-        request.releaseConnection();
+    public static void notifyRun(Run r) {
+        if(sendGlobalRests) {
+            String postString = (globalRestIsPost ?
+                    Utils.buildPostString(globalRestString, r) : null);
+            Utils.sendRest(globalRestIsPost,
+                           globalRestURL,
+                           globalRestContentType,
+                           postString);
+            JenkinsRest.LOG.info("Rest request was sent: " + postString);
+        }
     }
 }
