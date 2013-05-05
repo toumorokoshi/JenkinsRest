@@ -1,7 +1,6 @@
-package org.jenkins.plugins.jenkinspost;
+package org.jenkins.plugins.jenkinsrest;
 
 import java.io.IOException;
-import java.util.*;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -15,14 +14,14 @@ import hudson.tasks.Notifier;
 /* {@link Notifier}
  * 
  */
-public class JenkinsPostNotifier extends Notifier {
+public class JenkinsRestNotifier extends Notifier {
 
 	public BuildStepMonitor getRequiredMonitorService() {
 		return BuildStepMonitor.BUILD;
 	}
 	
 	public String getMyString() {
-		return "Hello Jenkins!";
+        return "";
 	}
 	
 	@Override
@@ -30,12 +29,12 @@ public class JenkinsPostNotifier extends Notifier {
 	
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-		JenkinsPost.LOG.info("Jenkins Post Notified!");
+		JenkinsRest.LOG.info("Jenkins REST Notified!");
 		return true;
 	}
 
 	@DataBoundConstructor
-	public JenkinsPostNotifier() {
+	public JenkinsRestNotifier() {
 	}
 
 }

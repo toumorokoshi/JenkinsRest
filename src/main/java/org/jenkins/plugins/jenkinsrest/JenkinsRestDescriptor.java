@@ -1,16 +1,15 @@
-package org.jenkins.plugins.jenkinspost;
+package org.jenkins.plugins.jenkinsrest;
 
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 
 @Extension
-public class JenkinsPostDescriptor extends BuildStepDescriptor<Publisher> {
+public class JenkinsRestDescriptor extends BuildStepDescriptor<Publisher> {
 	
-	public JenkinsPostDescriptor() {
-		super(JenkinsPostNotifier.class);
+	public JenkinsRestDescriptor() {
+		super(JenkinsRestNotifier.class);
 		load();
 	}
 
@@ -21,6 +20,6 @@ public class JenkinsPostDescriptor extends BuildStepDescriptor<Publisher> {
 
 	@Override
 	public String getDisplayName() {
-		return "Jenkins Post Plugin";
+		return "Call or send data to a rest api";
 	}
 }

@@ -1,0 +1,54 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="JenkinsREST">
+  	<f:optionalBlock name="sendGlobalRests" checked="${it.sendGlobalRests}"
+  		title="Send a REST request on job completion">
+	    <f:entry title="REST URL" help="/plugin/jenkinsrest/help-restURL.html">
+	      <f:textbox name="globalRestURL" value="${it.globalRestURL}"/>
+	    </f:entry>
+	    <f:optionalBlock name="globalRestIsPost" checked="${it.globalRestIsPost}"
+	        title="Send request as POST">
+            <f:entry title="REST ContentType" field="globalRestContentType">
+                <select name="globalRestContentType">
+                  <j:choose>
+                    <j:when test="${it.globalRestContentType == 'application/javascript'}">
+                        <option value="application/javascript" selected="selected">Javascript</option>
+                    </j:when>
+                    <j:otherwise>
+                        <option value="application/javascript">Javascript</option>
+                    </j:otherwise>
+                  </j:choose>
+                  <j:choose>
+                    <j:when test="${it.globalRestContentType == 'application/json'}">
+                        <option value="application/json" selected="selected">Json</option>
+                    </j:when>
+                    <j:otherwise>
+                        <option value="application/json">Json</option>
+                    </j:otherwise>
+                  </j:choose>
+                  <j:choose>
+                    <j:when test="${it.globalRestContentType == 'text/plain'}">
+                        <option value="text/plain" selected="selected">text</option>
+                    </j:when>
+                    <j:otherwise>
+                        <option value="text/plain">text</option>
+                    </j:otherwise>
+                  </j:choose>
+                  <j:choose>
+                    <j:when test="${it.globalRestContentType == 'application/xml'}">
+                        <option value="application/xml" selected="selected">XML</option>
+                    </j:when>
+                    <j:otherwise>
+                        <option value="application/xml">XML</option>
+                    </j:otherwise>
+                  </j:choose>
+                </select>
+            </f:entry>
+            <f:entry title="Rest String" help="/plugin/jenkinsrest/help-restString.html">
+              <f:expandableTextbox name="globalRestString" value="${it.globalRestString}"/>
+            </f:entry>
+        </f:optionalBlock>
+    </f:optionalBlock>
+  </f:section>
+</j:jelly> 
+		
