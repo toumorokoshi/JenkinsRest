@@ -28,7 +28,6 @@ public class JenkinsRest extends Plugin {
 	private static String globalRestString; // String to post to the globalRestURL
 	
 	public void start() throws IOException {
-		LOG.info("Starting JenkinsREST plugin...");
 		load();
 	}
 
@@ -39,14 +38,16 @@ public class JenkinsRest extends Plugin {
 	 */
 	@Override
 	public void configure(StaplerRequest req, JSONObject formData) throws IOException {
-		globalRestURL = formData.optString("globalRestURL");
 		if(formData.has("sendGlobalRests")) {
 			sendGlobalRests = true;
-			globalRestURL = formData.getJSONObject("sendGlobalRests").getString("globalRestURL");
-            globalRestIsPost = formData.getJSONObject("sendGlobalRests").has("globalRestIsPost");
-			globalRestContentType = formData.getJSONObject("sendGlobalRests").getString("globalRestContentType");
-			String s = formData.getJSONObject("sendGlobalRests").getString("globalRestString").substring(1);
-			globalRestString = s.substring(0, s.length() - 1);
+            JSONObject globalRestConfig = formData.getJSONObject("sendGlobalRests");
+			globalRestURL = globalRestConfig.getString("globalRestURL");
+            globalRestIsPost = globalRestConfig.has("globalRestIsPost");
+            if(globalRestIsPost) {
+                JSONObject globalPostConfig = globalRestConfig.getJSONObject("globalRestIsPost");
+                globalRestContentType = globalPostConfig.getString("globalRestContentType");
+                globalRestString = globalPostConfig.getString("globalRestString");
+            }
 		} else {
 			sendGlobalRests = false;
 		}
@@ -54,10 +55,25 @@ public class JenkinsRest extends Plugin {
 	}
 	
 	public static boolean getSendGlobalRests() { return sendGlobalRests; }
+    public static void setSendGlobalRests(boolean newVal) {
+        sendGlobalRests = newVal;
+    }
     public static boolean getGlobalRestIsPost() { return globalRestIsPost; }
+    public static void setGlobalRestIsPost(boolean newVal) {
+        globalRestIsPost = newVal;
+    }
 	public static String getGlobalRestURL() { return globalRestURL; }
+    public static void setGlobalRestURL(String newVal) {
+        globalRestURL = newVal;
+    }
 	public static String getGlobalRestContentType() { return globalRestContentType; }
+    public static void setGlobalRestContentType(String newVal) {
+        globalRestContentType = newVal;
+    }
 	public static String getGlobalRestString() { return globalRestString; }
+    public static void setGlobalRestString(String newVal) {
+        globalRestString = newVal;
+    }
 
 
 	public static ListBoxModel doFillGlobalRestContentTypeItems() {
@@ -77,7 +93,8 @@ public class JenkinsRest extends Plugin {
                            globalRestURL,
                            globalRestContentType,
                            postString);
-            JenkinsRest.LOG.info("Rest request was sent: " + postString);
+            // How does debug logging work?
+            //LOG.info("Rest request was sent to " + globalRestURL + ": " + postString);
         }
     }
 }

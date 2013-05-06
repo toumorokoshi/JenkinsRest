@@ -33,6 +33,10 @@ public class Utils {
         return postString;
     }
 
+    public static void setHttpClient(HttpClient client) {
+        httpclient = client;
+    }
+
     public static void sendRest(boolean isPost,
                                 String url,
                                 String contentType,
