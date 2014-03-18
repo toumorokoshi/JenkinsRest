@@ -45,8 +45,8 @@ public class JenkinsRestNotifier extends Notifier {
             for (String url : restURLs) {
                 Utils.sendRest(requestIsPost, url,
                         requestContentType, postString);
+                JenkinsRest.LOG.info("Rest request was sent, url: " + url + " postString: " + postString);
             }
-            JenkinsRest.LOG.info("Rest request was sent:" + postString);
         }
 		return true;
 	}
