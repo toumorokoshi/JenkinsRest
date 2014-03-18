@@ -57,13 +57,15 @@ public class Utils {
     }
 
     public static List<String> parseURLList(String urlList) {
-        // really dumb parsing, since we currently don't get valid json from the request, and it's unescaped
+        // really janky parsing, since we currently don't get valid json from the request, *and* it's unescaped :/
         List<String> urls = new ArrayList<String>();
+        if (urlList.charAt(0) == '"') // handle strings input into the REST plugin with enclosing " characters (pushed from some sources)
+            urlList = urlList.substring(1, urlList.length() - 1);
         if (urlList.charAt(0) != '[')
             urls.add(urlList);
         else {
-            String substring = urlList.substring(1, urlList.length() - 1);
-            urls = Arrays.asList(substring.replace(" ", "").split(","));
+            urlList = urlList.substring(1, urlList.length() - 1);
+            urls = Arrays.asList(urlList.replace(" ", "").split(","));
         }
         return urls;
     }
