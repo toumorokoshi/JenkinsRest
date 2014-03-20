@@ -1,6 +1,9 @@
 package org.jenkins.plugins.jenkinsrest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 import hudson.model.AbstractProject;
 import hudson.model.Result;
@@ -22,7 +25,7 @@ public class JenkinsRestNotifier extends Notifier {
 
     public final boolean requestIsPost;
     public final boolean onSuccessOnly;
-    public final String restURL;
+    public final String restURLs;
     public final String requestContentType;
     public final String postString;
 
@@ -37,10 +40,13 @@ public class JenkinsRestNotifier extends Notifier {
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         if(build.getResult() == Result.SUCCESS ||!onSuccessOnly) {
             String postString = (requestIsPost ?
-                Utils.buildPostString(this.postString, build) : null);
-            Utils.sendRest(requestIsPost, restURL,
-                    requestContentType, postString);
-            JenkinsRest.LOG.info("Rest request was sent:" + postString);
+            Utils.buildPostString(this.postString, build) : null);
+            List<String> restURLs = Utils.parseURLList(this.restURLs);
+            for (String url : restURLs) {
+                Utils.sendRest(requestIsPost, url,
+                        requestContentType, postString);
+                JenkinsRest.LOG.info("Rest request was sent, url: " + url + " postString: " + postString);
+            }
         }
 		return true;
 	}
@@ -48,12 +54,12 @@ public class JenkinsRestNotifier extends Notifier {
 	@DataBoundConstructor
 	public JenkinsRestNotifier(boolean requestIsPost,
                                boolean onSuccessOnly,
-                               String restURL,
+                               String restURLs,
                                String requestContentType,
                                String postString) {
         this.requestIsPost = requestIsPost;
         this.onSuccessOnly = onSuccessOnly;
-        this.restURL = restURL;
+        this.restURLs = restURLs;
         this.requestContentType = requestContentType;
         this.postString = postString;
 	}

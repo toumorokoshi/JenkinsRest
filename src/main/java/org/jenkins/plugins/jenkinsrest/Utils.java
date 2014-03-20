@@ -8,6 +8,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -53,14 +56,28 @@ public class Utils {
         }
     }
 
+    public static List<String> parseURLList(String urlList) {
+        // really janky parsing, since we currently don't get valid json from the request, *and* it's unescaped :/
+        List<String> urls = new ArrayList<String>();
+        if (urlList.charAt(0) == '"') // handle strings input into the REST plugin with enclosing " characters (pushed from some sources)
+            urlList = urlList.substring(1, urlList.length() - 1);
+        if (urlList.charAt(0) != '[')
+            urls.add(urlList);
+        else {
+            urlList = urlList.substring(1, urlList.length() - 1);
+            urls = Arrays.asList(urlList.replace(" ", "").split(","));
+        }
+        return urls;
+    }
+
     private static void sendGetRequest(String restURL) throws IOException {
         HttpGet request = new HttpGet(restURL);
         httpclient.execute(request);
         request.releaseConnection();
     }
 
-    private static void sendPostRequest(String restURL, String contentType, String restString) throws IOException {
-        HttpPost request = new HttpPost(restURL);
+    private static void sendPostRequest(String restURLs, String contentType, String restString) throws IOException {
+        HttpPost request = new HttpPost(restURLs);
         request.setEntity(new StringEntity(restString));
         request.setHeader("Content-type", contentType);
         httpclient.execute(request);
