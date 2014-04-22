@@ -1,6 +1,7 @@
 package org.jenkins.plugins.jenkinsrest;
 
 import hudson.model.Run;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -59,13 +60,12 @@ public class Utils {
     public static List<String> parseURLList(String urlList) {
         // really janky parsing, since we currently don't get valid json from the request, *and* it's unescaped :/
         List<String> urls = new ArrayList<String>();
-        if (urlList.charAt(0) == '"') // handle strings input into the REST plugin with enclosing " characters (pushed from some sources)
-            urlList = urlList.substring(1, urlList.length() - 1);
-        if (urlList.charAt(0) != '[')
-            urls.add(urlList);
-        else {
-            urlList = urlList.substring(1, urlList.length() - 1);
-            urls = Arrays.asList(urlList.replace(" ", "").split(","));
+
+        // Strip characters that could be used for JSON formatting (some sources push JSON to the field), and replace all whitespace
+        urlList = urlList.replaceAll("[\\[\\]\"' ]", "");
+
+        if (StringUtils.isNotEmpty(urlList)) {
+            urls = Arrays.asList(urlList.split(","));
         }
         return urls;
     }
