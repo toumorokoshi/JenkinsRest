@@ -25,7 +25,9 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </repository>
   </repositories>
-
+  <build>
+      <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+  </build>
   <pluginRepositories>
     <pluginRepository>
       <id>repo.jenkins-ci.org</id>
@@ -38,5 +40,15 @@
       <artifactId>httpclient</artifactId>
       <version>4.2.1</version>
     </dependency>
+    <dependency>
+        <groupId>org.unitils</groupId>
+        <artifactId>unitils</artifactId>
+        <version>3.4</version>
+    </dependency>
+      <dependency>
+          <groupId>org.unitils</groupId>
+          <artifactId>unitils-mock</artifactId>
+          <version>3.4</version>
+      </dependency>
   </dependencies>
 </project>
