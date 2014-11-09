@@ -1,5 +1,11 @@
 Runbook/Tips on developing Jenkins rest.
 
+# Prerequisites
+
+Add the setting.xml snippet described here:
+https://wiki.jenkins-ci.org/display/JENKINS/Plugin+tutorial
+
+
 * Run a sample jenkins server with:
     mvn hpi:run
 
